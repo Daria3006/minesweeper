@@ -16,6 +16,7 @@ class Game:
         self.logic_board = [[0 for _ in range(9)] for _ in range(9)]
         self.initialize_bombs()
 
+    #TODO make only bombs reveal
     def reset_board(self):
         self.board = self.logic_board[:]
         self.display_board()
@@ -73,7 +74,23 @@ class Game:
             self.board[i][j] = self.logic_board[i][j]
             self.display_board()
 
-    
+    def complete_path(self, i, j):
+        if self.logic_board[i][j] == 'default':
+            self.reveal_block(i , j)
+            self.complete_path(i - 1 , j)
+            self.complete_path(i - 1 , j -1)
+            self.complete_path(i - 1 , j + 1)
+            self.complete_path(i + 1 , j)
+            self.complete_path(i + 1 , j - 1)
+            self.complete_path(i + 1 , j + 1)
+            self.complete_path(i, j - 1)
+            self.complete_path(i , j + 1)
+
+        #TODO number implementation
+        if self.logic_board[i][j] == "":
+            self.reveal_block(i , j)
+            return
+
     def initialize_numbers(self):
         for i in range(9):
             for j in range(9):
@@ -140,7 +157,6 @@ class Game:
     
     def display_board(self):
          tiles = {0:"asseturi\\default.png", 1: "asseturi\\1.png", 2: "asseturi\\2.png", 3: "asseturi\\3.png", 4: "asseturi\\4.png", 5: "asseturi\\5.png", 6: "asseturi\\6.png", 7: "asseturi\\7.png", 8: "asseturi\\8.png", 'x': "asseturi\\bomb.png" , "hidden":"asseturi\\hidden.png" , "flag":"asseturi\\flag.png"}
-
          for i in range(9):
              for j in range(9):
                 self.screen.blit(pygame.image.load(tiles.get(self.board[i][j])), (self.coordinates[i], self.coordinates[j]))

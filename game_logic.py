@@ -139,7 +139,7 @@ class Game:
         self.display_board()
     
     def display_board(self):
-         tiles = {0: "C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\default.png", 1: "C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\1.png", 2: "C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\2.png", 3: "C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\3.png", 4: "C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\4.png", 5: "C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\5.png", 6: "C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\6.png", 7: "C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\7.png", 8: "C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\8.png", 'x': "C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\bomb.png" , "hidden":"C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\hidden.png" , "flag":"C:\\Users\\USER\\PycharmProjects\\minesweeper\\asseturi\\flag.png"}
+         tiles = {0:"asseturi\\default.png", 1: "asseturi\\1.png", 2: "asseturi\\2.png", 3: "asseturi\\3.png", 4: "asseturi\\4.png", 5: "asseturi\\5.png", 6: "asseturi\\6.png", 7: "asseturi\\7.png", 8: "asseturi\\8.png", 'x': "asseturi\\bomb.png" , "hidden":"asseturi\\hidden.png" , "flag":"asseturi\\flag.png"}
 
          for i in range(9):
              for j in range(9):

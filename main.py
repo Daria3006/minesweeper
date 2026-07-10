@@ -2,6 +2,7 @@ import pygame
 from pygame import *
 
 from game_logic import Game
+from menu import Menu
 
 pygame.init()
 
@@ -17,6 +18,8 @@ board.initialize_bombs()
 
 running = True
 while running:
+    menu = Menu(screen)
+    menu.display()
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             if event.key == K_r:

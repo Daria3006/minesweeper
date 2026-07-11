@@ -1,6 +1,5 @@
 import random
 import time
-from movement import get_movement
 
 import pygame.image
 
@@ -11,8 +10,7 @@ def display_board(logic):
             logic.screen.blit(pygame.image.load(logic.tiles.get(logic.board[i][j])),
                                    (logic.coordinates[i], logic.coordinates[j]))
 
-
-class Logic:
+class Initialization:
     def __init__(self, screen):
         self.screen = screen
         self.board = [["hidden" for _ in range(9)] for _ in range(9)]
@@ -22,40 +20,6 @@ class Logic:
                       4: "asseturi\\4.png", 5: "asseturi\\5.png", 6: "asseturi\\6.png", 7: "asseturi\\7.png",
                       8: "asseturi\\8.png", 'x': "asseturi\\bomb.png", "hidden": "asseturi\\hidden.png",
                       "flag": "asseturi\\flag.png"}
-
-        self.initialize_bombs()
-
-    def movement(self):
-
-        movement, i, j = get_movement()
-
-        if movement == "R":
-            self.reset_board()
-        elif movement == "ESCAPE":
-            return False
-        elif movement == "REVEAL":
-            self.reveal_block(i, j)
-        else:
-            self.place_flag(i, j)
-
-        return True
-
-    def complete_path(self, i, j):
-        if self.logic_board[i][j] == 'default':
-            self.reveal_block(i , j)
-            self.complete_path(i - 1 , j)
-            self.complete_path(i - 1 , j -1)
-            self.complete_path(i - 1 , j + 1)
-            self.complete_path(i + 1 , j)
-            self.complete_path(i + 1 , j - 1)
-            self.complete_path(i + 1 , j + 1)
-            self.complete_path(i, j - 1)
-            self.complete_path(i , j + 1)
-
-        #TODO number implementation
-        if self.logic_board[i][j] == "":
-            self.reveal_block(i , j)
-            return
 
 
     def initialize_bombs(self):
@@ -68,6 +32,15 @@ class Logic:
 
         self.initialize_numbers()
 
+
+    def isbomb(self, i, j):
+        if self.logic_board[i][j] != 'x':
+            return False
+        return True
+
+    def increment(self, i, j):
+        if not self.isbomb(i, j):
+            self.logic_board[i][j] += 1
 
     def initialize_numbers(self):
         for i in range(9):
@@ -133,23 +106,53 @@ class Logic:
 
         display_board(self)
 
-
-    def increment(self, i, j):
-        if not self.isbomb(i, j):
-            self.logic_board[i][j] += 1
-
     def new_boards(self):
         self.board = [["hidden" for _ in range(9)] for _ in range(9)]
         self.logic_board = [[0 for _ in range(9)] for _ in range(9)]
         self.initialize_bombs()
 
-    #TODO make only bombs reveal
+    # TODO make only bombs reveal (when press on bomb)
     def reset_board(self):
         self.board = self.logic_board[:]
         display_board(self)
         pygame.display.update()
         time.sleep(0.85)
         self.new_boards()
+
+class Mechanics(Initialization):
+    def __init__(self, screen):
+        super().__init__(screen)
+        self.initialize_bombs()
+
+    def mouse_pos(self ,i , j):
+        a = -10000
+        b = -10000
+        for x in range (9):
+            if self.coordinates[x] <= i < self.coordinates[x + 1]:
+                a = x
+            if self.coordinates[x] <= j < self.coordinates[x + 1]:
+                b = x
+        ok = True
+        if a == -10000 or b == -10000:
+            ok = False
+        return a , b , ok
+
+    def complete_path(self, i, j):
+        if self.logic_board[i][j] == 'default':
+            self.reveal_block(i , j)
+            self.complete_path(i - 1 , j)
+            self.complete_path(i - 1 , j -1)
+            self.complete_path(i - 1 , j + 1)
+            self.complete_path(i + 1 , j)
+            self.complete_path(i + 1 , j - 1)
+            self.complete_path(i + 1 , j + 1)
+            self.complete_path(i, j - 1)
+            self.complete_path(i , j + 1)
+
+        #TODO number implementation
+        if self.logic_board[i][j] == "":
+            self.reveal_block(i , j)
+            return
 
     def place_flag(self , i , j):
         i , j , ok = self.mouse_pos(i , j)
@@ -165,24 +168,6 @@ class Logic:
         if ok and self.board[i][j] == "hidden":
             self.board[i][j] = self.logic_board[i][j]
             display_board(self)
-
-    def mouse_pos(self ,i , j):
-        a = -10000
-        b = -10000
-        for x in range (9):
-            if self.coordinates[x] <= i < self.coordinates[x + 1]:
-                a = x
-            if self.coordinates[x] <= j < self.coordinates[x + 1]:
-                b = x
-        ok = True
-        if a == -10000 or b == -10000:
-            ok = False
-        return a , b , ok
-
-    def isbomb(self, i, j):
-        if self.logic_board[i][j] != 'x':
-            return False
-        return True
 
     def delete_flag(self , i , j):
         self.board[i][j] = "hidden"

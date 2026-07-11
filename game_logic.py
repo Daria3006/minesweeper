@@ -23,11 +23,9 @@ class Logic:
                       8: "asseturi\\8.png", 'x': "asseturi\\bomb.png", "hidden": "asseturi\\hidden.png",
                       "flag": "asseturi\\flag.png"}
 
-
-
+        self.initialize_bombs()
 
     def movement(self):
-        self.initialize_bombs()
 
         movement, i, j = get_movement()
 
@@ -40,7 +38,7 @@ class Logic:
         else:
             self.place_flag(i, j)
 
-        return None
+        return True
 
     def complete_path(self, i, j):
         if self.logic_board[i][j] == 'default':

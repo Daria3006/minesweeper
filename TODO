@@ -1,0 +1,6 @@
+1) Parametru trimis ca marime (pentru board , logic_board , coordinates)
+2) Meniu -> tabla pe tot ecranul sus mine mijloc meniu jos sweeper
+3) Timer // Normal cat dureaza meciul // Endless mode -> timp primit pentru fiecare tabla facuta , timp pierdut pentru fiecare greseale
+4) Leaderboard cu nume ( citit din fisier si afisat la finalul endless mode)
+5) Culoare pe timer in momentul in care faci o greseala sau cand termini o tabla(verde pentru reusita , altfel rosu)
+6) Timp in plus in momentul in care termini tabla mai rapid decat timpul intetionat(culoare galbena in loc de verde)

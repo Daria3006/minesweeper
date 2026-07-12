@@ -192,6 +192,7 @@ class Mechanics(Initialization):
             self.board[i][j] = self.logic_board[i][j]
             display_board(self)
 
+
     def delete_flag(self , i , j):
         self.board[i][j] = "hidden"
 

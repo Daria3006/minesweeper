@@ -1,14 +1,5 @@
-import pygame
+from display import get_image_size, get_screen_size
 
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-
-
-def get_screen_size():
-    return screen.get_size()
-
-def get_image_size(path):
-    image = pygame.image.load(path)
-    return image.get_size()
 
 class Menu:
     def __init__(self, screen):

@@ -4,7 +4,7 @@ from movement import get_movement
 
 pygame.init()
 
-game = Mechanics(screen)
+game = Mechanics(screen, 10)
 
 def movement():
     movement, i, j = get_movement()

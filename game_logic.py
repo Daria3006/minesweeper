@@ -9,8 +9,7 @@ from display import get_screen_size, get_image_size
 def display_board(logic):
     for i in range(logic.n):
         for j in range(logic.n):
-            logic.screen.blit(pygame.image.load(logic.tiles.get(logic.board[i][j])),
-                                   (logic.coordinates[i][0], logic.coordinates[j][1]))
+            logic.screen.blit(pygame.image.load(logic.tiles.get(logic.board[i][j])), (logic.coordinates[i][0], logic.coordinates[j][1]))
 
 class Initialization:
     def __init__(self, screen, n):
@@ -43,7 +42,6 @@ class Initialization:
 
         for i in range (len(x)):
             self.coordinates.append((x[i], y[i]))
-
 
     def initialize_bombs(self):
         bombs = []
@@ -147,10 +145,11 @@ class Mechanics(Initialization):
         super().__init__(screen, n)
         self.initialize_bombs()
 
-    def mouse_pos(self ,i , j):
+    def mouse_pos(self, i, j):
         a = -10000
         b = -10000
-        for x in range (self.n):
+
+        for x in range (len(self.coordinates)):
             if self.coordinates[x][0] <= i < self.coordinates[x + 1][0]:
                 a = x
             if self.coordinates[x][1] <= j < self.coordinates[x + 1][1]:

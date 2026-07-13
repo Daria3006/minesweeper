@@ -45,7 +45,7 @@ class Initialization:
 
     def initialize_bombs(self):
         bombs = []
-        while len(bombs) < 2 * self.n:
+        while len(bombs) < self.n:
             bomb = (random.randint(0, self.n -1), random.randint(0, self.n -1))
             if bomb not in bombs:
                 bombs.append(bomb)
@@ -58,6 +58,11 @@ class Initialization:
         if self.logic_board[i][j] != "x":
             return False
         return True
+
+    def isnumber(self , i , j):
+        if self.logic_board[i][j] == 1 or self.logic_board[i][j] == 2 or self.logic_board == 3:
+            return True
+        return False
 
     def increment(self, i, j):
         if not self.isbomb(i, j):
@@ -140,6 +145,8 @@ class Initialization:
         time.sleep(0.85)
         self.new_boards()
 
+
+
 class Mechanics(Initialization):
     def __init__(self, screen, n):
         super().__init__(screen, n)
@@ -149,7 +156,7 @@ class Mechanics(Initialization):
         a = -10000
         b = -10000
 
-        for cord in range (len(self.coordinates)):
+        for cord in range (len(self.coordinates) - 1):
             if self.coordinates[cord][1] <= y < self.coordinates[cord + 1][1]:
                 a = cord
             if self.coordinates[cord][0] <= x < self.coordinates[cord + 1][0]:
@@ -160,22 +167,67 @@ class Mechanics(Initialization):
             ok = False
         return a , b , ok
 
-    def complete_path(self, i, j):
-        if self.logic_board[i][j] == "default":
-            self.reveal_block(i , j)
-            self.complete_path(i - 1 , j)
-            self.complete_path(i - 1 , j -1)
-            self.complete_path(i - 1 , j + 1)
-            self.complete_path(i + 1 , j)
-            self.complete_path(i + 1 , j - 1)
-            self.complete_path(i + 1 , j + 1)
-            self.complete_path(i, j - 1)
-            self.complete_path(i , j + 1)
+    def complete_path(self, i, j , visited):
+        if (i  , j) not in visited:
+            visited.append((i , j))
+            if self.logic_board[i][j] == 0:
+                self.board[i][j] = self.logic_board[i][j]
 
-        #TODO number implementation
-        if self.logic_board[i][j] == "":
-            self.reveal_block(i , j)
-            return
+                if i == 0:
+                    if j == 0:
+                        self.complete_path(i, j + 1 , visited)
+                        self.complete_path(i + 1, j + 1 , visited)
+                    elif j == self.n - 1:
+                        self.complete_path(i , j - 1 , visited)
+                        self.complete_path(i + 1, j-1 , visited)
+                    else:
+                        self.complete_path(i + 1, j , visited)
+                        self.complete_path(i, j + 1, visited)
+                        self.complete_path(i + 1, j + 1, visited)
+                        self.complete_path(i, j - 1, visited)
+                        self.complete_path(i + 1, j - 1, visited)
+
+                elif i == self.n - 1:
+                    if j == 0:
+                        self.complete_path(i, j + 1 , visited)
+                        self.complete_path(i - 1, j + 1 , visited )
+                    elif j == self.n - 1:
+                        self.complete_path(i , j - 1 , visited)
+                        self.complete_path(i - 1, j-1 , visited)
+                    else:
+                        self.complete_path(i - 1 , j , visited)
+                        self.complete_path(i, j + 1, visited)
+                        self.complete_path(i - 1, j + 1, visited)
+                        self.complete_path(i, j - 1, visited)
+                        self.complete_path(i - 1, j - 1, visited)
+
+                elif j == 0:
+                    self.complete_path(i - 1, j, visited)
+                    self.complete_path(i - 1, j + 1 , visited)
+                    self.complete_path(i, j + 1, visited)
+                    self.complete_path(i + 1, j, visited)
+                    self.complete_path(i + 1, j + 1, visited)
+
+                elif j == self.n - 1:
+                    self.complete_path(i - 1, j, visited)
+                    self.complete_path(i - 1, j - 1, visited)
+                    self.complete_path(i, j - 1, visited)
+                    self.complete_path(i + 1, j - 1, visited)
+                    self.complete_path(i + 1, j, visited)
+                else:
+                    self.complete_path(i - 1 , j , visited)
+                    self.complete_path(i - 1 , j -1 , visited)
+                    self.complete_path(i - 1 , j + 1 , visited)
+                    self.complete_path(i + 1 , j , visited)
+                    self.complete_path(i + 1 , j - 1 , visited)
+                    self.complete_path(i + 1 , j + 1 , visited)
+                    self.complete_path(i, j - 1 , visited)
+                    self.complete_path(i , j + 1 , visited)
+
+
+            if self.isnumber(i  , j):
+                self.board[i][j] = self.logic_board[i][j]
+                return
 
     def place_flag(self , x , y):
         i , j , ok = self.mouse_pos(x , y)
@@ -188,9 +240,11 @@ class Mechanics(Initialization):
 
     def reveal_block(self , x , y):
         i , j , ok = self.mouse_pos(x , y)
-        print(i, j)
         if ok and self.board[i][j] == "hidden":
-            self.board[i][j] = self.logic_board[i][j]
+            if self.logic_board[i][j] == 0:
+                self.complete_path(i , j , [])
+            else:
+                self.board[i][j] = self.logic_board[i][j]
             display_board(self)
 
 

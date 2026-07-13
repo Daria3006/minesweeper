@@ -60,7 +60,7 @@ class Initialization:
         return True
 
     def isnumber(self , i , j):
-        if self.logic_board[i][j] == 1 or self.logic_board[i][j] == 2 or self.logic_board == 3:
+        if 1 <= self.logic_board[i][j] <= 8:
             return True
         return False
 

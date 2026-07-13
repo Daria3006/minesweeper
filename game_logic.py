@@ -9,7 +9,7 @@ from display import get_screen_size, get_image_size
 def display_board(logic):
     for i in range(logic.n):
         for j in range(logic.n):
-            logic.screen.blit(pygame.image.load(logic.tiles.get(logic.board[i][j])), (logic.coordinates[i][0], logic.coordinates[j][1]))
+            logic.screen.blit(pygame.image.load(logic.tiles.get(logic.board[i][j])), (logic.coordinates[j][0], logic.coordinates[i][1]))
 
 class Initialization:
     def __init__(self, screen, n):
@@ -49,13 +49,13 @@ class Initialization:
             bomb = (random.randint(0, self.n -1), random.randint(0, self.n -1))
             if bomb not in bombs:
                 bombs.append(bomb)
-                self.logic_board[bomb[0]][bomb[1]] = 'x'
+                self.logic_board[bomb[0]][bomb[1]] = "x"
 
         self.initialize_numbers()
 
 
     def isbomb(self, i, j):
-        if self.logic_board[i][j] != 'x':
+        if self.logic_board[i][j] != "x":
             return False
         return True
 
@@ -66,7 +66,7 @@ class Initialization:
     def initialize_numbers(self):
         for i in range(self.n):
             for j in range(self.n):
-                if self.logic_board[i][j] == 'x':
+                if self.logic_board[i][j] == "x":
                     # top left corner
                     if i == 0 and j == 0:
                         self.increment(i + 1, j)
@@ -145,22 +145,23 @@ class Mechanics(Initialization):
         super().__init__(screen, n)
         self.initialize_bombs()
 
-    def mouse_pos(self, i, j):
+    def mouse_pos(self, x, y):
         a = -10000
         b = -10000
 
-        for x in range (len(self.coordinates)):
-            if self.coordinates[x][0] <= i < self.coordinates[x + 1][0]:
-                a = x
-            if self.coordinates[x][1] <= j < self.coordinates[x + 1][1]:
-                b = x
+        for cord in range (len(self.coordinates)):
+            if self.coordinates[cord][1] <= y < self.coordinates[cord + 1][1]:
+                a = cord
+            if self.coordinates[cord][0] <= x < self.coordinates[cord + 1][0]:
+                b = cord
+
         ok = True
         if a == -10000 or b == -10000:
             ok = False
         return a , b , ok
 
     def complete_path(self, i, j):
-        if self.logic_board[i][j] == 'default':
+        if self.logic_board[i][j] == "default":
             self.reveal_block(i , j)
             self.complete_path(i - 1 , j)
             self.complete_path(i - 1 , j -1)
@@ -176,17 +177,18 @@ class Mechanics(Initialization):
             self.reveal_block(i , j)
             return
 
-    def place_flag(self , i , j):
-        i , j , ok = self.mouse_pos(i , j)
+    def place_flag(self , x , y):
+        i , j , ok = self.mouse_pos(x , y)
         if ok:
-            if self.board[i][j] == 'flag':
+            if self.board[i][j] == "flag":
                 self.delete_flag(i , j)
-            elif self.board[i][j] == 'hidden':
+            elif self.board[i][j] == "hidden":
                 self.board[i][j] = "flag"
             display_board(self)
 
-    def reveal_block(self , i , j):
-        i , j , ok = self.mouse_pos(i , j)
+    def reveal_block(self , x , y):
+        i , j , ok = self.mouse_pos(x , y)
+        print(i, j)
         if ok and self.board[i][j] == "hidden":
             self.board[i][j] = self.logic_board[i][j]
             display_board(self)

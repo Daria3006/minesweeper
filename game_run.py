@@ -22,7 +22,6 @@ def movement():
 
 running = True
 
-
 while running:
     if not movement():
         running = False

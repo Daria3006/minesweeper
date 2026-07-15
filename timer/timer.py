@@ -1,7 +1,11 @@
 import time
 import threading
 import sys
+
+import pygame
 from pynput import keyboard
+
+from screen import screen
 
 # ANSI escape codes for terminal coloring
 RESET = "\033[0m"
@@ -128,5 +132,14 @@ class MinesweeperTimer:
 
 
 if __name__ == "__main__":
-    game_timer = MinesweeperTimer(initial_time=30)
-    game_timer.run()
+    # game_timer = MinesweeperTimer(initial_time=30)
+    # game_timer.run()
+    pass
+
+def display_timer():
+    screen.blit(pygame.image.load("asseturi\\timer\\white_bg.png"), (20, 20))
+    screen.blit(pygame.image.load("asseturi\\timer\\1.png"), (20, 25))
+    screen.blit(pygame.image.load("asseturi\\timer\\1.png"), (40, 25))
+    screen.blit(pygame.image.load("asseturi\\timer\\1.png"), (80, 25))
+    screen.blit(pygame.image.load("asseturi\\timer\\1.png"), (100, 25))
+

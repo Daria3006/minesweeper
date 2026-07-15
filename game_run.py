@@ -1,6 +1,7 @@
 from screen import *
 from game_logic import Mechanics
 from movement import get_movement
+from timer.timer import display_timer
 
 pygame.init()
 
@@ -23,6 +24,7 @@ def movement():
 running = True
 
 while running:
+    # display_timer()
     if not movement():
         running = False
     pygame.display.update()

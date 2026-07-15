@@ -19,17 +19,17 @@ class Initialization:
         self.logic_board = [[0 for _ in range(n)] for _ in range(n)]
         self.coordinates = []
         self.initialize_coordinates()
-        self.tiles = {0: "asseturi\\default.png", 1: "asseturi\\1.png", 2: "asseturi\\2.png", 3: "asseturi\\3.png",
-                      4: "asseturi\\4.png", 5: "asseturi\\5.png", 6: "asseturi\\6.png", 7: "asseturi\\7.png",
-                      8: "asseturi\\8.png", 'x': "asseturi\\bomb.png", "hidden": "asseturi\\hidden.png",
-                      "flag": "asseturi\\flag.png"}
+        self.tiles = {0: "asseturi\\tiles\\default.png", 1: "asseturi\\tiles\\1.png", 2: "asseturi\\tiles\\2.png", 3: "asseturi\\tiles\\3.png",
+                      4: "asseturi\\tiles\\4.png", 5: "asseturi\\tiles\\5.png", 6: "asseturi\\tiles\\6.png", 7: "asseturi\\tiles\\7.png",
+                      8: "asseturi\\tiles\\8.png", 'x': "asseturi\\tiles\\bomb.png", "hidden": "asseturi\\tiles\\hidden.png",
+                      "flag": "asseturi\\tiles\\flag.png"}
 
     def initialize_coordinates(self):
         x = []
         y = []
 
         screen_size = get_screen_size()
-        image_size = get_image_size("asseturi\\default.png")
+        image_size = get_image_size("asseturi\\tiles\\default.png")
         if self.n % 2 == 0:
             x.append(screen_size[0] / 2 - (self.n / 2 * image_size[0]))
             y.append(screen_size[1] / 2 - (self.n / 2 * image_size[1]))

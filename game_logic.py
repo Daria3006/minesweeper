@@ -17,6 +17,7 @@ class Initialization:
         self.screen = screen
         self.board = [["hidden" for _ in range(n)] for _ in range(n)]
         self.logic_board = [[0 for _ in range(n)] for _ in range(n)]
+        self.bombs = []
         self.coordinates = []
         self.initialize_coordinates()
         self.tiles = {0: "asseturi\\default.png", 1: "asseturi\\1.png", 2: "asseturi\\2.png", 3: "asseturi\\3.png",
@@ -44,11 +45,10 @@ class Initialization:
             self.coordinates.append((x[i], y[i]))
 
     def initialize_bombs(self):
-        bombs = []
-        while len(bombs) < self.n:
+        while len(self.bombs) < self.n:
             bomb = (random.randint(0, self.n -1), random.randint(0, self.n -1))
-            if bomb not in bombs:
-                bombs.append(bomb)
+            if bomb not in self.bombs:
+                self.bombs.append(bomb)
                 self.logic_board[bomb[0]][bomb[1]] = "x"
 
         self.initialize_numbers()
@@ -241,15 +241,29 @@ class Mechanics(Initialization):
     def reveal_block(self , x , y):
         i , j , ok = self.mouse_pos(x , y)
         if ok and self.board[i][j] == "hidden":
+            if self.logic_board[i][j] == "x":
+                self.game_over()
             if self.logic_board[i][j] == 0:
                 self.complete_path(i , j , [])
+                display_board(self)
             else:
                 self.board[i][j] = self.logic_board[i][j]
-            display_board(self)
+                display_board(self)
+
 
 
     def delete_flag(self , i , j):
         self.board[i][j] = "hidden"
+
+    def reveal_bomb(self , i , j):
+        self.board[i][j] = self.logic_board[i][j]
+
+    def game_over(self):
+        for bomb in self.bombs:
+            self.reveal_bomb(bomb[0] , bomb[1])
+        self.bombs = []
+        display_board(self)
+
 
 
 

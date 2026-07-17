@@ -5,3 +5,5 @@ pygame.display.set_caption("Minesweeper")
 
 screen.fill((90, 90, 90))
 pygame.display.flip()
+
+

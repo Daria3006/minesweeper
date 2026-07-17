@@ -1,16 +1,14 @@
 from pygame import *
 import pygame
 
-
-
-def get_movement():
+def get_movement(is_game_running):
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             if event.key == K_r:
                 return "R", 0, 0
             if event.key == K_ESCAPE:
                 return "ESCAPE", 0, 0
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN and is_game_running:
             if event.button == 1:
                 i , j = pygame.mouse.get_pos()
                 return "REVEAL", i, j

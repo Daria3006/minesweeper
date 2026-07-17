@@ -14,6 +14,9 @@ def display_board(logic):
 class Initialization:
     def __init__(self, screen, n):
         self.n = n
+        self.game_running = True
+        self.total_bombs = 0
+        self.flag_placed = 0
         self.screen = screen
         self.board = [["hidden" for _ in range(n)] for _ in range(n)]
         self.logic_board = [[0 for _ in range(n)] for _ in range(n)]
@@ -48,6 +51,7 @@ class Initialization:
         while len(self.bombs) < self.n:
             bomb = (random.randint(0, self.n -1), random.randint(0, self.n -1))
             if bomb not in self.bombs:
+                self.total_bombs += 1
                 self.bombs.append(bomb)
                 self.logic_board[bomb[0]][bomb[1]] = "x"
 
@@ -137,12 +141,15 @@ class Initialization:
         self.logic_board = [[0 for _ in range(self.n)] for _ in range(self.n)]
         self.initialize_bombs()
 
-    # TODO make only bombs reveal (when press on bomb)
     def reset_board(self):
         self.board = self.logic_board[:]
         display_board(self)
         pygame.display.update()
         time.sleep(0.85)
+        self.total_bombs = 0
+        self.flag_placed = 0
+        self.bombs = []
+        self.game_running = True
         self.new_boards()
 
 
@@ -170,6 +177,10 @@ class Mechanics(Initialization):
     def complete_path(self, i, j , visited):
         if (i  , j) not in visited:
             visited.append((i , j))
+
+            if self.board[i][j] == "flag":
+                self.remove_flag(i , j)
+
             if self.logic_board[i][j] == 0:
                 self.board[i][j] = self.logic_board[i][j]
 
@@ -230,11 +241,14 @@ class Mechanics(Initialization):
                 return
 
     def place_flag(self , x , y):
+        if not self.game_running: return
         i , j , ok = self.mouse_pos(x , y)
         if ok:
             if self.board[i][j] == "flag":
+                self.flag_placed -= 1
                 self.delete_flag(i , j)
             elif self.board[i][j] == "hidden":
+                self.flag_placed += 1
                 self.board[i][j] = "flag"
             display_board(self)
 
@@ -259,10 +273,21 @@ class Mechanics(Initialization):
         self.board[i][j] = self.logic_board[i][j]
 
     def game_over(self):
+        self.game_running = False
         for bomb in self.bombs:
             self.reveal_bomb(bomb[0] , bomb[1])
         self.bombs = []
         display_board(self)
+
+    def remove_flag(self, i , j):
+        if self.board[i][j] == "flag":
+            self.flag_placed -= 1
+            self.board[i][j] = "hidden"
+
+
+    def get_bomb_count(self):
+        return self.total_bombs - self.flag_placed
+
 
 
 

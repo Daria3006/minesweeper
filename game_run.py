@@ -2,6 +2,7 @@ from screen import *
 from game_logic import Mechanics , display_board
 from movement import get_movement
 from timer.timer import display_timer
+from menu import Menu
 
 pygame.font.init()
 font = pygame.font.SysFont("Arial", 30)
@@ -26,23 +27,25 @@ def movement():
 
 running = True
 
+screen.fill((90, 90, 90))
 
+menu = Menu(screen)
+menu.initialize_board()
 
 
 while running:
-    screen.fill((90, 90, 90))
 
-    display_board(game)
-
-    current_count = game.get_bomb_count()
-    bomb_text = font.render(f"Bombs: {current_count}", True, (255, 255, 255))
-    screen.blit(bomb_text, (screen.get_width() - 200, 50))
-
-    if not game.game_running:
-        msg = go_font.render("GAME OVER", True, (255, 0, 0))
-        rect = msg.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
-        screen.blit(msg, rect)
-
+    # display_board(game)
+    #
+    # current_count = game.get_bomb_count()
+    # bomb_text = font.render(f"Bombs: {current_count}", True, (255, 255, 255))
+    # screen.blit(bomb_text, (screen.get_width() - 200, 50))
+    #
+    # if not game.game_running:
+    #     msg = go_font.render("GAME OVER", True, (255, 0, 0))
+    #     rect = msg.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+    #     screen.blit(msg, rect)
+    #
     if not movement():
         running = False
 

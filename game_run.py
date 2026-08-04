@@ -9,7 +9,6 @@ font = pygame.font.SysFont("Arial", 30)
 go_font = pygame.font.SysFont("Arial", 60, bold=True)
 pygame.init()
 
-game = Mechanics(screen, 10)
 
 def movement():
     movement, i, j = get_movement(game.game_running)
@@ -33,18 +32,39 @@ menu = Menu(screen)
 menu.initialize_board()
 pygame.display.update()
 
+buttons = 0
+n = 0
 while True:
     i, j = 0, 0
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             i, j = pygame.mouse.get_pos()
     msg = menu.get_button(i, j)
-    if msg == "START" or msg == "ENDLESS":
-        break
-    elif msg == "ESCAPE":
-        running = False
-        break
+
+    if buttons == 0:
+        if msg == "1":
+            menu.size_buttons()
+            pygame.display.update()
+            buttons = 1
+        if msg == "2":
+            break
+        elif msg == "3":
+            running = False
+            break
+    elif buttons == 1:
+        if msg == "1":
+            n = 10
+            break
+        if msg == "2":
+            n = 20
+            break
+        elif msg == "3":
+            n = 30
+            break
+
 screen.fill((90, 90, 90))
+
+game = Mechanics(screen, n)
 
 
 while running:

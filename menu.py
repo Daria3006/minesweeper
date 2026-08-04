@@ -70,13 +70,26 @@ class Menu:
         pygame.draw.rect(self.screen, (255, 0, 0), [self.size[0]/2 - 100, self.size[1]/2 + 60, 200, 50], 0, 10)
         self.screen.blit(exit_, (self.size[0] / 2 - 30, self.size[1] / 2 + 67, 200, 50))
 
+    def size_buttons(self):
+        ten = font.render("10x10", True, (0, 0, 0))
+        pygame.draw.rect(self.screen, (255, 255, 255), [self.size[0] / 2 - 100, self.size[1] / 2 - 100, 200, 50], 0, 10)
+        self.screen.blit(ten, (self.size[0] / 2 - 35, self.size[1] / 2 - 93, 200, 50))
+
+        twenty = font.render("20x20", True, (0, 0, 0))
+        pygame.draw.rect(self.screen, (255, 255, 255), [self.size[0] / 2 - 100, self.size[1] / 2 - 20, 200, 50], 0, 10)
+        self.screen.blit(twenty, (self.size[0] / 2 - 35, self.size[1] / 2 - 13, 200, 50))
+
+        thirty = font.render("30x30", True, (0, 0, 0))
+        pygame.draw.rect(self.screen, (255, 255, 255), [self.size[0] / 2 - 100, self.size[1] / 2 + 60, 200, 50], 0, 10)
+        self.screen.blit(thirty, (self.size[0] / 2 - 35, self.size[1] / 2 + 67, 200, 50))
+
 
     def get_button(self, i, j):
         if self.size[0]/2 - 100 <= i <= self.size[0]/2 + 100:
             if self.size[1]/2 - 100 <= j <= self.size[1]/2 - 50:
-                return "START"
+                return "1"
             if self.size[1]/2 - 20 <= j <= self.size[1]/2 + 30:
-                return "ENDLESS"
+                return "2"
             if self.size[1]/2 + 60 <= j <= self.size[1]/2 + 110:
-                return "ESCAPE"
+                return "3"
         return None

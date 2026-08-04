@@ -31,23 +31,39 @@ screen.fill((90, 90, 90))
 
 menu = Menu(screen)
 menu.initialize_board()
+pygame.display.update()
+
+while True:
+    i, j = 0, 0
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            i, j = pygame.mouse.get_pos()
+    msg = menu.get_button(i, j)
+    if msg == "START" or msg == "ENDLESS":
+        break
+    elif msg == "ESCAPE":
+        running = False
+        break
+screen.fill((90, 90, 90))
 
 
 while running:
 
-    # display_board(game)
-    #
-    # current_count = game.get_bomb_count()
-    # bomb_text = font.render(f"Bombs: {current_count}", True, (255, 255, 255))
-    # screen.blit(bomb_text, (screen.get_width() - 200, 50))
-    #
-    # if not game.game_running:
-    #     msg = go_font.render("GAME OVER", True, (255, 0, 0))
-    #     rect = msg.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
-    #     screen.blit(msg, rect)
-    #
     if not movement():
         running = False
+
+    display_board(game)
+
+    current_count = game.get_bomb_count()
+    bomb_text = font.render(f"Bombs: {current_count}", True, (255, 255, 255))
+    screen.blit(bomb_text, (screen.get_width() - 200, 50))
+
+    if not game.game_running:
+        msg = go_font.render("GAME OVER", True, (255, 0, 0))
+        rect = msg.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+        screen.blit(msg, rect)
+
+
 
     pygame.display.update()
 

@@ -7,19 +7,19 @@ from display import get_screen_size, get_image_size
 
 
 def display_board(logic):
-    for i in range(logic.n):
-        for j in range(logic.n):
+    for i in range(logic.board_size):
+        for j in range(logic.board_size):
             logic.screen.blit(pygame.image.load(logic.tiles.get(logic.board[i][j])), (logic.coordinates[j][0], logic.coordinates[i][1]))
 
 class Initialization:
-    def __init__(self, screen, n):
-        self.n = n
+    def __init__(self, screen, board_size):
+        self.board_size = board_size
         self.game_running = True
         self.total_bombs = 0
         self.flag_placed = 0
         self.screen = screen
-        self.board = [["hidden" for _ in range(n)] for _ in range(n)]
-        self.logic_board = [[0 for _ in range(n)] for _ in range(n)]
+        self.board = [["hidden" for _ in range(board_size)] for _ in range(board_size)]
+        self.logic_board = [[0 for _ in range(board_size)] for _ in range(board_size)]
         self.bombs = []
         self.coordinates = []
         self.initialize_coordinates()
@@ -34,13 +34,13 @@ class Initialization:
 
         screen_size = get_screen_size()
         image_size = get_image_size("asseturi\\tiles\\default.png")
-        if self.n % 2 == 0:
-            x.append(screen_size[0] / 2 - (self.n / 2 * image_size[0]))
-            y.append(screen_size[1] / 2 - (self.n / 2 * image_size[1]))
+        if self.board_size % 2 == 0:
+            x.append(screen_size[0] / 2 - (self.board_size / 2 * image_size[0]))
+            y.append(screen_size[1] / 2 - (self.board_size / 2 * image_size[1]))
         else:
-            x.append(screen_size[0] / 2- ((self.n - 1) / 2) * image_size[0] - (image_size[0] / 2) )
-            y.append(screen_size[1] / 2 - ((self.n - 1) / 2) * image_size[1] - (image_size[1] / 2) )
-        for _ in range (self.n):
+            x.append(screen_size[0] / 2 - ((self.board_size - 1) / 2) * image_size[0] - (image_size[0] / 2))
+            y.append(screen_size[1] / 2 - ((self.board_size - 1) / 2) * image_size[1] - (image_size[1] / 2))
+        for _ in range (self.board_size):
             x.append(x[len(x) - 1] + 60)
             y.append(y[len(y) - 1] + 60)
 
@@ -48,8 +48,8 @@ class Initialization:
             self.coordinates.append((x[i], y[i]))
 
     def initialize_bombs(self):
-        while len(self.bombs) < self.n:
-            bomb = (random.randint(0, self.n -1), random.randint(0, self.n -1))
+        while len(self.bombs) < 1:
+            bomb = (random.randint(0, self.board_size - 1), random.randint(0, self.board_size - 1))
             if bomb not in self.bombs:
                 self.total_bombs += 1
                 self.bombs.append(bomb)
@@ -73,8 +73,8 @@ class Initialization:
             self.logic_board[i][j] += 1
 
     def initialize_numbers(self):
-        for i in range(self.n):
-            for j in range(self.n):
+        for i in range(self.board_size):
+            for j in range(self.board_size):
                 if self.logic_board[i][j] == "x":
                     # top left corner
                     if i == 0 and j == 0:
@@ -82,7 +82,7 @@ class Initialization:
                         self.increment(i, j + 1)
                         self.increment(i + 1, j + 1)
                     # top right corner
-                    elif i == 0 and j == self.n - 1:
+                    elif i == 0 and j == self.board_size - 1:
                         self.increment(i, j - 1)
                         self.increment(i + 1, j - 1)
                         self.increment(i + 1, j)
@@ -94,17 +94,17 @@ class Initialization:
                         self.increment(i + 1, j)
                         self.increment(i + 1, j + 1)
                     # bottom left corner
-                    elif i == self.n - 1 and j == 0:
+                    elif i == self.board_size - 1 and j == 0:
                         self.increment(i - 1, j)
                         self.increment(i - 1, j + 1)
                         self.increment(i, j + 1)
                     # bottom right corner
-                    elif i == self.n - 1 and j == self.n - 1:
+                    elif i == self.board_size - 1 and j == self.board_size - 1:
                         self.increment(i, j - 1)
                         self.increment(i - 1, j - 1)
                         self.increment(i - 1, j)
                     # bottom border
-                    elif i == self.n - 1:
+                    elif i == self.board_size - 1:
                         self.increment(i, j - 1)
                         self.increment(i, j + 1)
                         self.increment(i - 1, j - 1)
@@ -118,7 +118,7 @@ class Initialization:
                         self.increment(i, j + 1)
                         self.increment(i + 1, j + 1)
                     # right border
-                    elif j == self.n - 1:
+                    elif j == self.board_size - 1:
                         self.increment(i - 1, j)
                         self.increment(i + 1, j)
                         self.increment(i - 1, j - 1)
@@ -137,8 +137,8 @@ class Initialization:
         display_board(self)
 
     def new_boards(self):
-        self.board = [["hidden" for _ in range(self.n)] for _ in range(self.n)]
-        self.logic_board = [[0 for _ in range(self.n)] for _ in range(self.n)]
+        self.board = [["hidden" for _ in range(self.board_size)] for _ in range(self.board_size)]
+        self.logic_board = [[0 for _ in range(self.board_size)] for _ in range(self.board_size)]
         self.initialize_bombs()
 
     def reset_board(self):
@@ -152,11 +152,22 @@ class Initialization:
         self.game_running = True
         self.new_boards()
 
+    def win_condition(self):
+        if not self.game_running:
+            return False
+
+        for i in range(self.board_size):
+            for j  in range(self.board_size):
+                if self.logic_board[i][j] != 'x' and self.board[i][j] in ["hidden" , "flag"]:
+                    return False
+        return True
+
+
 
 
 class Mechanics(Initialization):
-    def __init__(self, screen, n):
-        super().__init__(screen, n)
+    def __init__(self, screen, board_size):
+        super().__init__(screen, board_size)
         self.initialize_bombs()
 
     def mouse_pos(self, x, y):
@@ -188,7 +199,7 @@ class Mechanics(Initialization):
                     if j == 0:
                         self.complete_path(i, j + 1 , visited)
                         self.complete_path(i + 1, j + 1 , visited)
-                    elif j == self.n - 1:
+                    elif j == self.board_size - 1:
                         self.complete_path(i , j - 1 , visited)
                         self.complete_path(i + 1, j-1 , visited)
                     else:
@@ -198,11 +209,11 @@ class Mechanics(Initialization):
                         self.complete_path(i, j - 1, visited)
                         self.complete_path(i + 1, j - 1, visited)
 
-                elif i == self.n - 1:
+                elif i == self.board_size - 1:
                     if j == 0:
                         self.complete_path(i, j + 1 , visited)
                         self.complete_path(i - 1, j + 1 , visited )
-                    elif j == self.n - 1:
+                    elif j == self.board_size - 1:
                         self.complete_path(i , j - 1 , visited)
                         self.complete_path(i - 1, j-1 , visited)
                     else:
@@ -219,7 +230,7 @@ class Mechanics(Initialization):
                     self.complete_path(i + 1, j, visited)
                     self.complete_path(i + 1, j + 1, visited)
 
-                elif j == self.n - 1:
+                elif j == self.board_size - 1:
                     self.complete_path(i - 1, j, visited)
                     self.complete_path(i - 1, j - 1, visited)
                     self.complete_path(i, j - 1, visited)

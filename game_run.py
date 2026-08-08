@@ -2,11 +2,15 @@ from screen import *
 from game_logic import Mechanics , display_board
 from movement import get_movement
 from menu import Menu
+from timer import create_timer
 
 pygame.font.init()
 #Fonts!!
 font = pygame.font.SysFont("Arial", 30)
 go_font = pygame.font.SysFont("Arial", 60, bold=True)
+
+#Timer!!
+timer_font , timer_sec , timer_text = create_timer()
 
 pygame.init()
 
@@ -34,7 +38,7 @@ while running:
     menu.initialize_board()
     pygame.display.update()
 
-    buttons = 0
+    menu_button = 0
     board_size = 0
     in_menu = True
 
@@ -46,18 +50,18 @@ while running:
 
         msg = menu.get_button(i, j)
 
-        if buttons == 0:
+        if menu_button == 0:
             if msg == "1":
                 menu.size_buttons()
                 pygame.display.update()
-                buttons = 1
+                menu_button = 1
             if msg == "2":
-                running = False
-                in_menu = False
+                menu_button = 2
             elif msg == "3":
                 running = False
                 in_menu = False
-        elif buttons == 1:
+        #Normal Mode
+        elif menu_button == 1:
             if msg == "1":
                 board_size = 10
                 in_menu = False
@@ -67,13 +71,21 @@ while running:
             elif msg == "3":
                 board_size = 30
                 in_menu = False
+        #Endless Mode
+        elif menu_button == 2:
+            board_size = 10
+            in_menu = False
 
     if not running:
         break
 
+    #Start Game
     screen.fill((90, 90, 90))
     game = Mechanics(screen, board_size)
     in_game = True
+
+    #Timer ticks
+    last_tick = pygame.time.get_ticks()
 
     while in_game and running:
         screen.fill((90, 90, 90))
@@ -87,6 +99,22 @@ while running:
             break
 
         display_board(game)
+        if menu_button == 2:
+            current_time = pygame.time.get_ticks()
+            if current_time - last_tick >= 1000:
+                if timer_sec > 0:
+                    timer_sec -= 100
+                last_tick = current_time
+
+            minutes = timer_sec // 60
+            sec = timer_sec % 60
+            if sec == 0 and minutes == 0:
+                timer_text = timer_font.render("%02d:%02d" % (minutes, sec), True, (255, 0, 0))
+            else:
+                timer_text = timer_font.render("%02d:%02d" % (minutes, sec), True, (255, 255, 255))
+
+            screen.blit(timer_text, (300, 20))
+
 
         #Bomb text(count)
         current_count = game.get_bomb_count()

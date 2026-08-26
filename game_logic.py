@@ -3,13 +3,13 @@ import time
 
 import pygame.image
 
-from display import get_screen_size, get_image_size
+from display import get_screen_size, get_image_size, transform_tile
 
 
 def display_board(logic):
     for i in range(logic.board_size):
         for j in range(logic.board_size):
-            logic.screen.blit(pygame.image.load(logic.tiles.get(logic.board[i][j])), (logic.coordinates[j][0], logic.coordinates[i][1]))
+            logic.screen.blit(logic.tiles.get(logic.board[i][j]), (logic.coordinates[j][0], logic.coordinates[i][1]))
 
 class Initialization:
     def __init__(self, screen, board_size):
@@ -23,26 +23,22 @@ class Initialization:
         self.bombs = []
         self.coordinates = []
         self.initialize_coordinates()
-        self.tiles = {0: "asseturi\\tiles\\default.png", 1: "asseturi\\tiles\\1.png", 2: "asseturi\\tiles\\2.png", 3: "asseturi\\tiles\\3.png",
-                      4: "asseturi\\tiles\\4.png", 5: "asseturi\\tiles\\5.png", 6: "asseturi\\tiles\\6.png", 7: "asseturi\\tiles\\7.png",
-                      8: "asseturi\\tiles\\8.png", 'x': "asseturi\\tiles\\bomb.png", "hidden": "asseturi\\tiles\\hidden.png",
-                      "flag": "asseturi\\tiles\\flag.png"}
+        self.tiles = {0: transform_tile("asseturi\\tiles\\default.png", board_size), 1: transform_tile("asseturi\\tiles\\1.png", board_size), 2: transform_tile("asseturi\\tiles\\2.png", board_size), 3: transform_tile("asseturi\\tiles\\3.png", board_size),
+                      4: transform_tile("asseturi\\tiles\\4.png", board_size), 5: transform_tile("asseturi\\tiles\\5.png", board_size), 6: transform_tile("asseturi\\tiles\\6.png", board_size), 7: transform_tile("asseturi\\tiles\\7.png", board_size),
+                      8: transform_tile("asseturi\\tiles\\8.png", board_size), 'x': transform_tile("asseturi\\tiles\\bomb.png", board_size), "hidden": transform_tile("asseturi\\tiles\\hidden.png", board_size),
+                      "flag": transform_tile("asseturi\\tiles\\flag.png", board_size)}
 
     def initialize_coordinates(self):
         x = []
         y = []
 
         screen_size = get_screen_size()
-        image_size = get_image_size("asseturi\\tiles\\default.png")
-        if self.board_size % 2 == 0:
-            x.append(screen_size[0] / 2 - (self.board_size / 2 * image_size[0]))
-            y.append(screen_size[1] / 2 - (self.board_size / 2 * image_size[1]))
-        else:
-            x.append(screen_size[0] / 2 - ((self.board_size - 1) / 2) * image_size[0] - (image_size[0] / 2))
-            y.append(screen_size[1] / 2 - ((self.board_size - 1) / 2) * image_size[1] - (image_size[1] / 2))
+        image_size = get_image_size(transform_tile("asseturi\\tiles\\default.png", self.board_size))
+        x.append(screen_size[0] / 2 - (self.board_size / 2 * image_size[0]))
+        y.append(screen_size[1] / 2 - (self.board_size / 2 * image_size[1]))
         for _ in range (self.board_size):
-            x.append(x[len(x) - 1] + 60)
-            y.append(y[len(y) - 1] + 60)
+            x.append(x[len(x) - 1] + image_size[0])
+            y.append(y[len(y) - 1] + image_size[0])
 
         for i in range (len(x)):
             self.coordinates.append((x[i], y[i]))

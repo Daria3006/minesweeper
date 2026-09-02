@@ -113,11 +113,24 @@ while running:
         if menu_button == 2 and timer_sec <= 0:
             game.game_running = False
 
-        if menu_button == 2 and game.game_running:
+        if menu_button == 2:
+
             if game.win_condition():
-                timer_sec += 30
+                if board_size < 30:
+                    board_size += 10
+                else:
+                    board_size = 10
+
+                if board_size == 10:
+                    timer_sec += 30
+                elif board_size == 20:
+                    timer_sec += 60
+                else:
+                    timer_sec += 120
                 timer_flash_color = (0, 255, 0)
                 timer_flash_timer = pygame.time.get_ticks()
+
+
 
                 screen.fill((90, 90, 90))
                 display_board(game)
@@ -125,7 +138,7 @@ while running:
                 minutes = timer_sec // 60
                 sec = timer_sec % 60
                 timer_text = timer_font.render("%02d:%02d" % (minutes, sec), True, timer_flash_color)
-                screen.blit(timer_text, (300, 20))
+                screen.blit(timer_text, (200, 20))
 
                 current_count = game.get_bomb_count()
                 bomb_text = font.render(f"Bombs: {current_count}", True, (255, 255, 255))
@@ -137,10 +150,12 @@ while running:
                 game = Mechanics(screen, board_size)
                 last_tick = pygame.time.get_ticks()
 
-            elif not game.game_running:
-                timer_sec = max(0, timer_sec - 30)
+            if not game.game_running:
+                timer_sec = max(0, timer_sec - 10)
                 timer_flash_color = (255, 0, 0)
                 timer_flash_timer = pygame.time.get_ticks()
+
+
 
                 if timer_sec <= 0:
                     game.game_running = False
@@ -151,7 +166,7 @@ while running:
                     minutes = timer_sec // 60
                     sec = timer_sec % 60
                     timer_text = timer_font.render("%02d:%02d" % (minutes, sec), True, timer_flash_color)
-                    screen.blit(timer_text, (300, 20))
+                    screen.blit(timer_text, (200, 20))
 
                     current_count = game.get_bomb_count()
                     bomb_text = font.render(f"Bombs: {current_count}", True, (255, 255, 255))
@@ -164,13 +179,12 @@ while running:
                     last_tick = pygame.time.get_ticks()
 
         display_board(game)
-
         current_time = pygame.time.get_ticks()
 
         if menu_button == 2 and game.game_running:
             if current_time - last_tick >= 1000:
                 if timer_sec > 0:
-                    timer_sec -= 100
+                    timer_sec -= 1
                 last_tick = current_time
 
             if timer_sec <= 0:
@@ -189,7 +203,7 @@ while running:
                 current_color = (255, 255, 255)
 
             timer_text = timer_font.render("%02d:%02d" % (minutes, sec), True, current_color)
-            screen.blit(timer_text, (300, 20))
+            screen.blit(timer_text, (200, 20))
 
         # Bomb text(count)
         current_count = game.get_bomb_count()

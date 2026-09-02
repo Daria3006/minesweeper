@@ -15,7 +15,7 @@ class Initialization:
     def __init__(self, screen, board_size):
         self.board_size = board_size
         self.game_running = True
-        self.total_bombs = 0
+        self.total_bombs = board_size * 2
         self.flag_placed = 0
         self.screen = screen
         self.board = [["hidden" for _ in range(board_size)] for _ in range(board_size)]
@@ -44,10 +44,9 @@ class Initialization:
             self.coordinates.append((x[i], y[i]))
 
     def initialize_bombs(self):
-        while len(self.bombs) < 1:
+        while len(self.bombs) < self.total_bombs:
             bomb = (random.randint(0, self.board_size - 1), random.randint(0, self.board_size - 1))
             if bomb not in self.bombs:
-                self.total_bombs += 1
                 self.bombs.append(bomb)
                 self.logic_board[bomb[0]][bomb[1]] = "x"
 
@@ -142,7 +141,6 @@ class Initialization:
         display_board(self)
         pygame.display.update()
         time.sleep(0.85)
-        self.total_bombs = 0
         self.flag_placed = 0
         self.bombs = []
         self.game_running = True

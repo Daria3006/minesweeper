@@ -21,5 +21,5 @@ def transform_tile(path, size):
     if size == 20:
         image = pygame.transform.scale(image, (40, 40))
     else:
-        image = pygame.transform.scale(image, (30, 30))
+        image = pygame.transform.scale(image, (25, 25))
     return image
